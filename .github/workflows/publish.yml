@@ -1,0 +1,41 @@
+name: Publish and Deploy
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+  pull_request:
+
+env:
+  IMAGE_NAME: legit-frontend
+
+jobs:
+  node-modules:
+    name: Sync Node.js dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+        with:
+          name: build-artifact
+          path: pack/*.nupkg
+          ref: pull_request.head.sha
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.13
+      - name: Cache node modules
+        uses: actions/cache@v2
+        id: cache-step
+        with:
+          path: |
+            ~/.cache/Cypress
+            node_modules
+          key: ${{ runner.os }}-node_modules-${{ github.sha }}
+      - name: Install Node.js dependencies
+        if: steps.cache-step.outputs.cache-hit != 'true'
+        run: |
+          npm set //npm.pkg.github.com/:_authToken ${{ secrets.PACKAGES_RW_TOKEN }}
+          yarn install --frozen-lockfile
