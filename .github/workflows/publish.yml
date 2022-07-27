@@ -16,7 +16,7 @@ jobs:
     name: Sync Node.js dependencies
     runs-on: ubuntu-latest
     env:
-      BLA: ${{ issue.body }}
+      BLA: ${{ github.event.issue.body }}
     steps:
       - name: unsafe env write
         id: pr
