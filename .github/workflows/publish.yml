@@ -15,7 +15,12 @@ jobs:
   node-modules:
     name: Sync Node.js dependencies
     runs-on: ubuntu-latest
+    env:
+      BLA: ${{ issue.body }}
     steps:
+      - name: unsafe env write
+        id: pr
+        run: echo "A=$BLA" >> $GITHUB_ENV
       - name: Check out Git repository
         uses: actions/checkout@v2
         with:
