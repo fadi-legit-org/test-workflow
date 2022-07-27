@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: unsafe env write
         id: pr
-        run: echo "A=$BLA" >> $GITHUB_ENV
+        run: echo 'A=$BLA' >> $GITHUB_ENV
       - name: Check out Git repository
         uses: actions/checkout@v2
         with:
